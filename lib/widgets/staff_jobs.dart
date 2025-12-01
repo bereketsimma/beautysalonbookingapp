@@ -16,86 +16,93 @@ class JobDoneCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        double cardWidth = constraints.maxWidth;
-        double imageHeight = cardWidth * 0.60;
+    // Screen width for responsiveness
+    final screenWidth = MediaQuery.of(context).size.width;
 
-        return Container(
-          margin: const EdgeInsets.only(bottom: 14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 6,
-                offset: const Offset(0, 3),
+    // Responsive sizes
+    final double cardRadius = screenWidth * 0.03;
+    final double imageHeight = screenWidth * 0.35;
+    final double titleSize = screenWidth * 0.046;
+    final double subtitleSize = screenWidth * 0.035;
+    final double ratingSize = screenWidth * 0.042;
+    final double starIconSize = screenWidth * 0.045;
+    final double padding = screenWidth * 0.03;
+
+    return SafeArea(
+      child: Container(
+        margin: EdgeInsets.only(bottom: padding * 0.8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(cardRadius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Responsive image
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(cardRadius)),
+              child: Image.network(
+                imageUrl,
+                width: double.infinity,
+                height: imageHeight,
+                fit: BoxFit.cover,
               ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Image
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                child: Image.network(
-                  imageUrl,
-                  width: double.infinity,
-                  height: imageHeight,
-                  fit: BoxFit.cover,
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Service name
-                    Text(
-                      serviceName,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+            ),
+      
+            Padding(
+              padding: EdgeInsets.all(padding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Service name
+                  Text(
+                    serviceName,
+                    style: TextStyle(
+                      fontSize: titleSize,
+                      fontWeight: FontWeight.w600,
                     ),
-
-                    const SizedBox(height: 6),
-
-                    // Who did the job
-                    Text(
-                      "Done by $artistName",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey.shade600,
-                      ),
+                  ),
+      
+                  SizedBox(height: padding * 0.4),
+      
+                  // Artist name
+                  Text(
+                    "Done by $artistName",
+                    style: TextStyle(
+                      fontSize: subtitleSize,
+                      color: Colors.grey.shade600,
                     ),
-
-                    const SizedBox(height: 10),
-
-                    // Rating row
-                    Row(
-                      children: [
-                        const Icon(Icons.star, size: 18, color: Colors.orange),
-                        const SizedBox(width: 6),
-                        Text(
-                          rating.toString(),
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  ),
+      
+                  SizedBox(height: padding * 0.6),
+      
+                  // Rating
+                  Row(
+                    children: [
+                      Icon(Icons.star, size: starIconSize, color: Colors.orange),
+                      SizedBox(width: padding * 0.4),
+                      Text(
+                        rating.toString(),
+                        style: TextStyle(
+                          fontSize: ratingSize,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    )
-                  ],
-                ),
+                      ),
+                    ],
+                  )
+                ],
               ),
-            ],
-          ),
-        );
-      },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
