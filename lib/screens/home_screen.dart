@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:mybeautybooking_flutter/constants/appcolors.dart';
+import 'package:mybeautybooking_flutter/widgets/DynamicCardContainer.dart';
 import 'package:mybeautybooking_flutter/widgets/drawer.dart';
 import 'package:mybeautybooking_flutter/widgets/staff_card.dart';
 import 'package:mybeautybooking_flutter/widgets/staff_jobs.dart';
 import 'package:mybeautybooking_flutter/widgets/service_card.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -16,15 +16,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Sample top services data used by ServiceList.
-  final List<Map<String, String>> topServices = [
-    {"icon": "💇‍♀️", "name": "Haircut"},
-    {"icon": "💆‍♀️", "name": "Facial"},
-    {"icon": "💅", "name": "Manicure"},
-    {"icon": "💇‍♀️", "name": "Haircut"},
-    {"icon": "💆‍♀️", "name": "Facial"},
-    {"icon": "💅", "name": "Manicure"},
-  ];
 
   int _selectedIndex = 0;
 
@@ -36,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+final screenWidth = MediaQuery.sizeOf(context).width;
     final mediaQuery = MediaQuery.of(context);
-
     return Scaffold(
       key: _scaffoldKey,
       drawer: const CustomDrawer(userEmail: 'Vj0eF@example.com'),
@@ -121,77 +112,105 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              ServiceList(topServices: topServices),
-              const SizedBox(height: 20),
+ServiceList(
+  topServices: [
+    {
+      "icon": "https://cdn-icons-png.flaticon.com/512/194/194882.png",
+      "name": "Haircut",
+    },
+    {
+      "icon": "https://cdn-icons-png.flaticon.com/512/2910/2910761.png",
+      "name": "Facial",
+    },
+    {
+      "icon": "https://cdn-icons-png.flaticon.com/512/135/135763.png",
+      "name": "Manicure",
+    },
+
+
+
+    {
+      "icon": "💇‍♀️",
+      "name": "Haircut",
+    },
+    {
+      "icon": "💆‍♀️",
+      "name": "Facial",
+    },
+    {
+      "icon": "💅",
+      "name": "Manicure",}
+  ],
+),              const SizedBox(height: 20),
 
               // Top Artist
               _buildSectionHeader("Top Artist"),
               const SizedBox(height: 10),
-              SizedBox(
-                height: mediaQuery.size.height * 0.28,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    double cardWidth = constraints.maxWidth * 0.55;
-                    return ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        SizedBox(
-                          width: cardWidth,
-                          child: ArtistCard(
-                            imageUrl: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
-                            name: "Alaina",
-                            role: "Beauty Artist",
-                            rating: 4.8,
-                            jobs: 4,
-                          ),
-                        ),
-                        SizedBox(
-                          width: cardWidth,
-                          child: ArtistCard(
-                            imageUrl: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
-                            name: "Amber",
-                            role: "Beauty Artist",
-                            rating: 4.7,
-                            jobs: 3,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
+             SizedBox(
+  height: mediaQuery.size.height * 0.28, // height of list
+  child: ListView(
+    scrollDirection: Axis.horizontal,
+    children: [
+      SizedBox(
+        width: mediaQuery.size.width * 0.55, // fixed width relative to screen
+        child: ArtistCard(
+          imageUrl: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
+          name: "Alaina",
+          role: "Beauty Artist",
+          rating: 4.8,
+          jobs: 4,
+        ),
+      ),
+      SizedBox(
+        width: mediaQuery.size.width * 0.55,
+        child: ArtistCard(
+          imageUrl: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
+          name: "Amber",
+          role: "Beauty Artist",
+          rating: 4.7,
+          jobs: 3,
+        ),
+      ),
+    ],
+  ),
+)
+,
               const SizedBox(height: 20),
 
               // Best Artist Near You
               _buildSectionHeader("Best Artist Near You"),
               const SizedBox(height: 10),
+              
               SizedBox(
-                height: mediaQuery.size.height * 0.30,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    SizedBox(
-                      width: mediaQuery.size.width * 0.5,
-                      child: JobDoneCard(
-                        imageUrl: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
-                        artistName: "Amber",
-                        serviceName: "Hair Coloring",
-                        rating: 4.7,
-                      ),
-                    ),
-                    SizedBox(width: mediaQuery.size.width * 0.05),
-                    SizedBox(
-                      width: mediaQuery.size.width * 0.5,
-                      child: JobDoneCard(
-                        imageUrl: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
-                        artistName: "Alaina",
-                        serviceName: "Facial Treatment",
-                        rating: 4.8,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+  height: screenWidth * 0.5, // or any height
+  child: ListView(
+    scrollDirection: Axis.horizontal,
+    children: [
+      SizedBox(
+        width: screenWidth * 0.5, // finite width!
+        child: JobDoneCard(
+          imageUrl: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
+          artistName: "Amber",
+          serviceName: "Hair Coloring",
+          rating: 4.7,
+        ),
+      ),
+      SizedBox(width: screenWidth * 0.05), // spacing
+      SizedBox(
+        width: screenWidth * 0.5,
+        child: JobDoneCard(
+          imageUrl: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
+          artistName: "Amber",
+          serviceName: "Hair Coloring",
+          rating: 4.7,
+        ),
+      ),
+    ],
+  ),
+),
+              
+              
+    
             ],
           ),
         ),

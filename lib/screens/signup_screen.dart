@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mybeautybooking_flutter/constants/appcolors.dart';
 
-class BeautyLoginPage extends StatefulWidget {
-  const BeautyLoginPage({Key? key}) : super(key: key);
+class BeautySignUpPage extends StatefulWidget {
+  const BeautySignUpPage({Key? key}) : super(key: key);
 
   @override
-  State<BeautyLoginPage> createState() => _BeautyLoginPageState();
+  State<BeautySignUpPage> createState() => _BeautySignUpPageState();
 }
 
-class _BeautyLoginPageState extends State<BeautyLoginPage> {
+class _BeautySignUpPageState extends State<BeautySignUpPage> {
   bool hidePass = true;
 
   @override
@@ -24,36 +24,31 @@ class _BeautyLoginPageState extends State<BeautyLoginPage> {
             children: [
               // ------------------ TOP PART (IMAGE) ------------------
               Container(
-                
                 height: height * 0.60,
                 width: width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                   const Text(
-                    "Let's get you Login!",
-                    style: TextStyle(
-                      color: AppColors.textWhite,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  const Text(
-                    "Enter your information below.",
-                    style: TextStyle(color: AppColors.textWhite, fontSize: 16),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                ]),
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage("assets/images/loginbg.png"),
                     fit: BoxFit.cover,
                   ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "Create Your Account",
+                      style: TextStyle(
+                        color: AppColors.textWhite,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Sign up to get started with us.",
+                      style: TextStyle(color: AppColors.textWhite, fontSize: 16),
+                    ),
+                  ],
                 ),
               ),
 
@@ -66,12 +61,11 @@ class _BeautyLoginPageState extends State<BeautyLoginPage> {
             ],
           ),
 
-          // ------------------ FLOATING LOGIN CARD ------------------
+          // ------------------ FLOATING SIGN-UP CARD ------------------
           Positioned(
-            top: height * 0.36, // overlaps both sections
+            top: height * 0.36,
             child: Container(
               width: width * 0.85,
-              height: height * 0.60,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -87,25 +81,36 @@ class _BeautyLoginPageState extends State<BeautyLoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    _socialButton(
-      icon: Icons.facebook,
-      color: Colors.blue.shade800,
-      label: "Facebook",
-    ),
-    const SizedBox(width: 15),
-    _socialButton(
-      icon: Icons.g_mobiledata,
-      color: Colors.red.shade700,
-      label: "Google",
-    ),
-  ],
-),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _socialButton(
+                        icon: Icons.facebook,
+                        color: Colors.blue.shade800,
+                        label: "Facebook",
+                      ),
+                      const SizedBox(width: 15),
+                      _socialButton(
+                        icon: Icons.g_mobiledata,
+                        color: Colors.red.shade700,
+                        label: "Google",
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 20),
 
-                 
+                  // Full Name
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: "Full Name",
+                      prefixIcon: const Icon(Icons.person),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
                   // Email
                   TextField(
                     decoration: InputDecoration(
@@ -116,7 +121,6 @@ class _BeautyLoginPageState extends State<BeautyLoginPage> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 15),
 
                   // Password
@@ -138,24 +142,22 @@ class _BeautyLoginPageState extends State<BeautyLoginPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 15),
 
-                  const SizedBox(height: 10),
-
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: const Text("Forgot Password?",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,),
+                  // Confirm Password
+                  TextField(
+                    obscureText: hidePass,
+                    decoration: InputDecoration(
+                      labelText: "Confirm Password",
+                      prefixIcon: const Icon(Icons.lock),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ),
+                  const SizedBox(height: 20),
 
-                  const SizedBox(height: 10),
-
-                  // Login Button
+                  // Sign Up Button
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -168,28 +170,27 @@ class _BeautyLoginPageState extends State<BeautyLoginPage> {
                       ),
                       onPressed: () {},
                       child: const Text(
-                        "Login",
+                        "Sign Up",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 10),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Don't have an account? "),
+                      const Text("Already have an account? "),
                       TextButton(
                         onPressed: () {
-    Navigator.pushNamed(context, '/signup');
-
+                          Navigator.pop(context); // Back to login
                         },
                         child: const Text(
-                          "Register Now",
-                          style: TextStyle(fontWeight: FontWeight.bold
-                          
-                          , color: AppColors.primary),
+                          "Login",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
                     ],
@@ -227,4 +228,3 @@ Widget _socialButton({required IconData icon, required Color color, required Str
     ),
   );
 }
-

@@ -18,76 +18,70 @@ class ArtistCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screen = MediaQuery.of(context).size;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double cardWidth = constraints.maxWidth; // take all available width
+        double imageHeight = cardWidth * 0.55;   // keep aspect ratio
 
-    // Responsive sizes
-    double cardWidth = screen.width * 0.55;  // great for horizontal lists
-    double imageHeight = cardWidth * 0.55;   // keeps perfect aspect ratio
-
-    return Container(
-      width: cardWidth,
-      margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
+        return Container(
+          width: cardWidth,
+          margin: const EdgeInsets.only(right: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
-        ],
-      ),
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.network(
-              imageUrl,
-              width: double.infinity,
-              height: imageHeight,
-              fit: BoxFit.cover,
-            ),
-          ),
-
-          // Content
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
-
-                Text(role,
-                    style: TextStyle(
-                        fontSize: 13, color: Colors.grey.shade600)),
-                const SizedBox(height: 10),
-
-                Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Image.network(
+                  imageUrl,
+                  width: double.infinity,
+                  height: imageHeight,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.star,
-                        size: 16, color: Colors.orange),
-                    const SizedBox(width: 4),
-
-                    Text(rating.toString(),
-                        style: const TextStyle(fontWeight: FontWeight.w600)),
-                    const SizedBox(width: 4),
-
-                    Text("($jobs)",
-                        style: TextStyle(color: Colors.grey.shade600)),
+                    Text(name,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 4),
+                    Text(role,
+                        style: TextStyle(
+                            fontSize: 13, color: Colors.grey.shade600)),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, size: 16, color: Colors.orange),
+                        const SizedBox(width: 4),
+                        Text(rating.toString(),
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w600)),
+                        const SizedBox(width: 4),
+                        Text("($jobs)",
+                            style: TextStyle(color: Colors.grey.shade600)),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
