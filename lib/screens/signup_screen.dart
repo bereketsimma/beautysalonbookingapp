@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mybeautybooking_flutter/constants/appcolors.dart';
+import 'package:mybeautybooking_flutter/utils/validators.dart';
 
 class BeautySignUpPage extends StatefulWidget {
   const BeautySignUpPage({Key? key}) : super(key: key);
@@ -9,6 +10,12 @@ class BeautySignUpPage extends StatefulWidget {
 }
 
 class _BeautySignUpPageState extends State<BeautySignUpPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPassController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+
   bool hidePass = true;
 
   @override
@@ -17,169 +24,185 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.topCenter,
+        body: Stack(alignment: Alignment.topCenter, children: [
+      Column(
         children: [
-          Column(
-            children: [
-              // ------------------ TOP PART (IMAGE) ------------------
-              Container(
-                height: height * 0.60,
-                width: width,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/loginbg.png"),
-                    fit: BoxFit.cover,
+          // ------------------ TOP PART (IMAGE) ------------------
+          Container(
+            height: height * 0.60,
+            width: width,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/loginbg.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Create Your Account",
+                  style: TextStyle(
+                    color: AppColors.textWhite,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                child: Column(
+                SizedBox(height: 10),
+                Text(
+                  "Sign up to get started with us.",
+                  style: TextStyle(color: AppColors.textWhite, fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+
+          // ------------------ BOTTOM PART (BLUE) ------------------
+          Container(
+            height: height * 0.40,
+            width: width,
+            color: AppColors.secondary,
+          ),
+        ],
+      ),
+
+      // ------------------ FLOATING SIGN-UP CARD ------------------
+      Positioned(
+          top: height * 0.36,
+          child: Container(
+            width: width * 0.85,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "Create Your Account",
-                      style: TextStyle(
-                        color: AppColors.textWhite,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  children: [
+                    _socialButton(
+                      icon: Icons.facebook,
+                      color: Colors.blue.shade800,
+                      label: "Facebook",
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      "Sign up to get started with us.",
-                      style: TextStyle(color: AppColors.textWhite, fontSize: 16),
+                    const SizedBox(width: 15),
+                    _socialButton(
+                      icon: Icons.g_mobiledata,
+                      color: Colors.red.shade700,
+                      label: "Google",
                     ),
                   ],
                 ),
-              ),
-
-              // ------------------ BOTTOM PART (BLUE) ------------------
-              Container(
-                height: height * 0.40,
-                width: width,
-                color: AppColors.secondary,
-              ),
-            ],
-          ),
-
-          // ------------------ FLOATING SIGN-UP CARD ------------------
-          Positioned(
-            top: height * 0.36,
-            child: Container(
-              width: width * 0.85,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _socialButton(
-                        icon: Icons.facebook,
-                        color: Colors.blue.shade800,
-                        label: "Facebook",
-                      ),
-                      const SizedBox(width: 15),
-                      _socialButton(
-                        icon: Icons.g_mobiledata,
-                        color: Colors.red.shade700,
-                        label: "Google",
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Full Name
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: "Full Name",
-                      prefixIcon: const Icon(Icons.person),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Email
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: "Email Address",
-                      prefixIcon: const Icon(Icons.email),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Password
-                  TextField(
-                    obscureText: hidePass,
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          hidePass ? Icons.visibility_off : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() => hidePass = !hidePass);
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Confirm Password
-                  TextField(
-                    obscureText: hidePass,
-                    decoration: InputDecoration(
-                      labelText: "Confirm Password",
-                      prefixIcon: const Icon(Icons.lock),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Sign Up Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+                const SizedBox(height: 20),
+                Form(
+                    key: _formKey,
+                   autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(children: [
+                    // Full Name
+                    TextFormField(
+                      controller: nameController,
+                      validator: Validators.validateEmail,
+                      decoration: InputDecoration(
+                        labelText: "Full Name",
+                        prefixIcon: const Icon(Icons.person),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: () {},
-                      child: const Text(
-                        "Sign Up",
-                        style: TextStyle(color: Colors.white),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    // Email
+                    TextFormField(
+                      controller: emailController,
+                      validator: Validators.validateEmail,
+                      decoration: InputDecoration(
+                        labelText: "Email Address",
+                        prefixIcon: const Icon(Icons.email),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
+                    const SizedBox(height: 15),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    // Password
+                    TextFormField(
+                      controller: passwordController,
+                      validator: Validators.validateEmail,
+                      obscureText: hidePass,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            hidePass ? Icons.visibility_off : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() => hidePass = !hidePass);
+                          },
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+
+                    // Confirm Password
+                    TextFormField(
+                      controller: confirmPassController,
+                      validator: Validators.validateEmail,
+                      obscureText: hidePass,
+                      decoration: InputDecoration(
+                        labelText: "Confirm Password",
+                        prefixIcon: const Icon(Icons.lock),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Sign Up Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+                       onPressed: () {
+    if (_formKey.currentState!.validate()) {
+      // All fields are correct
+      print("Form is valid — continue to staff page");
+      // Navigate to staff page here
+    } else {
+      print("Form is NOT valid — show errors");
+    }
+  },
+                        child: const Text(
+                          "Sign Up",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       const Text("Already have an account? "),
                       TextButton(
                         onPressed: () {
@@ -193,19 +216,18 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ])
+                  ]),
+                )
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          ))
+    ]));
   }
 }
 
-Widget _socialButton({required IconData icon, required Color color, required String label}) {
+Widget _socialButton(
+    {required IconData icon, required Color color, required String label}) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
     decoration: BoxDecoration(
