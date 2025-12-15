@@ -27,7 +27,6 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
         body: Stack(alignment: Alignment.topCenter, children: [
       Column(
         children: [
-          // ------------------ TOP PART (IMAGE) ------------------
           Container(
             height: height * 0.60,
             width: width,
@@ -56,8 +55,6 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
               ],
             ),
           ),
-
-          // ------------------ BOTTOM PART (BLUE) ------------------
           Container(
             height: height * 0.40,
             width: width,
@@ -65,8 +62,6 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
           ),
         ],
       ),
-
-      // ------------------ FLOATING SIGN-UP CARD ------------------
       Positioned(
           top: height * 0.36,
           child: Container(
@@ -104,13 +99,13 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
                 ),
                 const SizedBox(height: 20),
                 Form(
-                    key: _formKey,
-                   autovalidateMode: AutovalidateMode.onUserInteraction,
+                  key: _formKey,
+                  //  autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(children: [
                     // Full Name
                     TextFormField(
                       controller: nameController,
-                      validator: Validators.validateEmail,
+                      validator: Validators.validateName,
                       decoration: InputDecoration(
                         labelText: "Full Name",
                         prefixIcon: const Icon(Icons.person),
@@ -139,7 +134,7 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
                     // Password
                     TextFormField(
                       controller: passwordController,
-                      validator: Validators.validateEmail,
+                      validator: Validators.validatePassword,
                       obscureText: hidePass,
                       decoration: InputDecoration(
                         labelText: "Password",
@@ -162,7 +157,8 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
                     // Confirm Password
                     TextFormField(
                       controller: confirmPassController,
-                      validator: Validators.validateEmail,
+                      validator: (value) => Validators.validateConfirmPassword(
+                          value, passwordController.text),
                       obscureText: hidePass,
                       decoration: InputDecoration(
                         labelText: "Confirm Password",
@@ -185,15 +181,15 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                       onPressed: () {
-    if (_formKey.currentState!.validate()) {
-      // All fields are correct
-      print("Form is valid — continue to staff page");
-      // Navigate to staff page here
-    } else {
-      print("Form is NOT valid — show errors");
-    }
-  },
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            // All fields are correct
+                            print("Form is valid — continue to staff page");
+                            // Navigate to staff page here
+                          } else {
+                            print("Form is NOT valid — show errors");
+                          }
+                        },
                         child: const Text(
                           "Sign Up",
                           style: TextStyle(color: Colors.white),
