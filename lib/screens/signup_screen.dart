@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mybeautybooking_flutter/constants/appcolors.dart';
 import 'package:mybeautybooking_flutter/utils/validators.dart';
+import 'package:mybeautybooking_flutter/services/api_service.dart';
 
 class BeautySignUpPage extends StatefulWidget {
   const BeautySignUpPage({Key? key}) : super(key: key);
@@ -16,7 +17,47 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
   final TextEditingController confirmPassController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
 
-  bool hidePass = true;
+  bool hidePass = true;bool _loading = false;
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _register() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _loading = true;
+      _errorMessage = null;
+    });
+
+    final result = await ApiService.registerUser(
+      username: nameController.text,
+      email: emailController.text,
+      password: passwordController.text,
+    );
+
+    setState(() {
+      _loading = false;
+    });
+
+    if (result['success']) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result['message'])),
+      );
+      _formKey.currentState!.reset();
+    } else {
+      setState(() {
+        _errorMessage = result['message'];
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -174,26 +215,28 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
                     SizedBox(
                       width: double.infinity,
                       height: 50,
-                      child: ElevatedButton(
+                      child:  _loading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            // All fields are correct
-                            print("Form is valid — continue to staff page");
-                            // Navigate to staff page here
-                          } else {
-                            print("Form is NOT valid — show errors");
-                          }
-                        },
+                        onPressed:  _register,
                         child: const Text(
                           "Sign Up",
                           style: TextStyle(color: Colors.white),
-                        ),
+                        ))),
+                         if (_errorMessage != null) ...[
+                const SizedBox(height: 16),
+                Text(
+                  _errorMessage!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ],]
+                  
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -215,10 +258,10 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
                     ])
                   ]),
                 )
-              ],
+        )],
             ),
-          ))
-    ]));
+          )
+    ;
   }
 }
 
