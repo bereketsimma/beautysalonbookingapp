@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mybeautybooking_flutter/constants/appcolors.dart';
+import 'package:mybeautybooking_flutter/controller/register.dart';
 import 'package:mybeautybooking_flutter/screens/home_screen.dart';
 import 'package:mybeautybooking_flutter/utils/validators.dart';
 import 'package:mybeautybooking_flutter/services/api_service.dart';
@@ -21,6 +22,33 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
   bool hidePass = true;bool _loading = false;
   String? _errorMessage;
 
+  final SignUpController _controller = SignUpController();
+
+void _register() async {
+  if (!_formKey.currentState!.validate()) return;
+
+  setState(() {});
+
+  final result = await _controller.registerUser(
+    name: nameController.text,
+    email: emailController.text,
+    password: passwordController.text,
+  );
+
+  setState(() {}); // update UI for loading or error
+
+  if (result['success']) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(result['message'])));
+    _formKey.currentState!.reset();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+  } else {
+    setState(() {});
+  }
+}
+
+
   @override
   void dispose() {
     nameController.dispose();
@@ -28,44 +56,6 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
     passwordController.dispose();
     super.dispose();
   }
-Future<void> _register() async {
-  if (!_formKey.currentState!.validate()) return;
-
-  setState(() {
-    _loading = true;
-    _errorMessage = null;
-  });
-
-  final result = await ApiService.registerUser(
-    username: nameController.text,
-    email: emailController.text,
-    password: passwordController.text,
-  );
-
-  setState(() {
-    _loading = false;
-  });
-
-  if (result['success']) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(result['message'])),
-    );
-
-    // Reset the form
-    _formKey.currentState!.reset();
-
-    // Navigate to HomePage
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
-    );
-  } else {
-    setState(() {
-      _errorMessage = result['message'];
-    });
-  }
-}
-
 
 
   @override
