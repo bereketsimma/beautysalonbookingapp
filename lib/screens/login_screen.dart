@@ -9,6 +9,19 @@ class BeautyLoginPage extends StatefulWidget {
 }
 
 class _BeautyLoginPageState extends State<BeautyLoginPage> {
+  final TextEditingController emailController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
+final _formKey = GlobalKey<FormState>();
+bool _loading = false;
+String? _errorMessage;
+
+@override
+void dispose() {
+  emailController.dispose();
+  passwordController.dispose();
+  super.dispose();
+}
+
   bool hidePass = true;
 
   @override

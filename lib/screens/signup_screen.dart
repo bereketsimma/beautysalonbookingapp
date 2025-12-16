@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mybeautybooking_flutter/constants/appcolors.dart';
+import 'package:mybeautybooking_flutter/screens/home_screen.dart';
 import 'package:mybeautybooking_flutter/utils/validators.dart';
 import 'package:mybeautybooking_flutter/services/api_service.dart';
 
@@ -27,36 +28,44 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
     passwordController.dispose();
     super.dispose();
   }
+Future<void> _register() async {
+  if (!_formKey.currentState!.validate()) return;
 
-  Future<void> _register() async {
-    if (!_formKey.currentState!.validate()) return;
+  setState(() {
+    _loading = true;
+    _errorMessage = null;
+  });
 
-    setState(() {
-      _loading = true;
-      _errorMessage = null;
-    });
+  final result = await ApiService.registerUser(
+    username: nameController.text,
+    email: emailController.text,
+    password: passwordController.text,
+  );
 
-    final result = await ApiService.registerUser(
-      username: nameController.text,
-      email: emailController.text,
-      password: passwordController.text,
+  setState(() {
+    _loading = false;
+  });
+
+  if (result['success']) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(result['message'])),
     );
 
-    setState(() {
-      _loading = false;
-    });
+    // Reset the form
+    _formKey.currentState!.reset();
 
-    if (result['success']) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result['message'])),
-      );
-      _formKey.currentState!.reset();
-    } else {
-      setState(() {
-        _errorMessage = result['message'];
-      });
-    }
+    // Navigate to HomePage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
+    );
+  } else {
+    setState(() {
+      _errorMessage = result['message'];
+    });
   }
+}
+
 
 
   @override
