@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mybeautybooking_flutter/constants/appcolors.dart';
 import 'package:mybeautybooking_flutter/controller/register.dart';
+import 'package:mybeautybooking_flutter/models/service.dart';
 import 'package:mybeautybooking_flutter/screens/home_screen.dart';
 import 'package:mybeautybooking_flutter/utils/validators.dart';
 import 'package:mybeautybooking_flutter/services/api_service.dart';
@@ -22,31 +23,46 @@ class _BeautySignUpPageState extends State<BeautySignUpPage> {
   bool hidePass = true;bool _loading = false;
   String? _errorMessage;
 
-  final SignUpController _controller = SignUpController();
+  // final SignUpController _controller = SignUpController();
 
-void _register() async {
-  if (!_formKey.currentState!.validate()) return;
+
+  Future<void> _onSignUpPressed() async {
+     if (!_formKey.currentState!.validate()) return;
 
   setState(() {});
+  // 1. Create the model from UI input
+ final signUpRequest = SignUpRequest(
+  name: nameController.text.trim(),
+  email: emailController.text.trim(),
+  password: passwordController.text.trim(),
+);
 
-  final result = await _controller.registerUser(
-    name: nameController.text,
-    email: emailController.text,
-    password: passwordController.text,
-  );
+final result = await signupAptRequest(signUpRequest);
 
-  setState(() {}); // update UI for loading or error
-
-  if (result['success']) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(result['message'])));
-    _formKey.currentState!.reset();
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+  // 3. Update UI based on response
+  if (result['success'] == true) {
+    _showSuccess(result['message']);
+     Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
+    );
   } else {
-    setState(() {});
+    _showError(result['message']);
   }
 }
+
+void _showSuccess(String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(message)),
+  );
+}
+
+void _showError(String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(message)),
+  );
+}
+
 
 
   @override
@@ -223,7 +239,7 @@ void _register() async {
                             borderRadius: BorderRadius.circular(25),
                           ),
                         ),
-                        onPressed:  _register,
+                        onPressed:  _onSignUpPressed,
                         child: const Text(
                           "Sign Up",
                           style: TextStyle(color: Colors.white),
@@ -244,7 +260,7 @@ void _register() async {
                       const Text("Already have an account? "),
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context); // Back to login
+    Navigator.pushNamed(context, '/login');
                         },
                         child: const Text(
                           "Login",

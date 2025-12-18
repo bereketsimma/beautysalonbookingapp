@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mybeautybooking_flutter/constants/appcolors.dart';
 import 'package:mybeautybooking_flutter/controller/login-controller.dart';
+import 'package:mybeautybooking_flutter/models/service.dart';
 import 'package:mybeautybooking_flutter/screens/home_screen.dart';
+import 'package:mybeautybooking_flutter/services/api_service.dart';
 
 class BeautyLoginPage extends StatefulWidget {
   const BeautyLoginPage({Key? key}) : super(key: key);
@@ -25,6 +27,45 @@ class _BeautyLoginPageState extends State<BeautyLoginPage> {
     passwordController.dispose();
     super.dispose();
   }
+
+
+
+  Future<void> _onloginPressed() async {
+     if (!_formKey.currentState!.validate()) return;
+
+  setState(() {});
+  // 1. Create the model from UI input
+ final loginRequest = LoginRequest(
+  email: emailController.text.trim(),
+  password: passwordController.text.trim(),
+);
+
+final result = await loginAptRequest(loginRequest);
+
+  // 3. Update UI based on response
+  if (result['success'] == true) {
+    _showSuccess(result['message']);
+     Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
+    );
+  } else {
+    _showError(result['message']);
+  }
+}
+
+void _showSuccess(String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(message)),
+  );
+}
+
+void _showError(String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(message)),
+  );
+}
+
 
   void _login() async {
     if (!_formKey.currentState!.validate()) return;
@@ -223,7 +264,7 @@ class _BeautyLoginPageState extends State<BeautyLoginPage> {
                                         borderRadius: BorderRadius.circular(25),
                                       ),
                                     ),
-                                    onPressed: _login,
+                                    onPressed:_onloginPressed,
                                     child: const Text(
                                       "Login",
                                       style: TextStyle(color: Colors.white),
