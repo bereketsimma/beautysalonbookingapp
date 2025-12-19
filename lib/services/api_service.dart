@@ -46,9 +46,6 @@ Future<Map<String, dynamic>> signupAptRequest(
   }
 }
 
-
-
-
 Future<Map<String, dynamic>> loginAptRequest(
   LoginRequest request,
 ) async {
@@ -83,7 +80,7 @@ Future<Map<String, dynamic>> loginAptRequest(
     }
   } catch (e) {
     print('NETWORK ERROR: $e');
-    
+
     return {
       'success': false,
       'message': 'Failed to connect to server',
@@ -91,66 +88,68 @@ Future<Map<String, dynamic>> loginAptRequest(
   }
 }
 
+Future<List<Staff>> fetchStaffs() async {
+  final url = Uri.parse('${ApiConstants.baseUrl}/api/staff/');
 
-
-  Future<List<Staff>> fetchStaffs() async {
-    final url = Uri.parse('${ApiConstants.baseUrl}/api/staffs/');
-
-    try {
-      final response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
+  try {
+    final response = await http.get(
+      url,
+      headers: {
         'Accept': 'application/json',
-      });
+      },
+    );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.map((json) => Staff.fromJson(json)).toList();
-      } else {
-        throw Exception('Failed to load staffs');
-      }
-    } catch (e) {
-      throw Exception('Network error: $e');
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => Staff.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load staffs (${response.statusCode})');
     }
+  } catch (e, stackTrace) {
+    print("Error fetching staffs: $e");
+    print(stackTrace); // optional: shows where the error happened
+    throw Exception('Network error: $e');
   }
+}
 
+Future<List<Staff>> fetchservicess() async {
+  final url = Uri.parse('${ApiConstants.baseUrl}/api/services/');
 
-  Future<List<Staff>> fetchservicess() async {
-    final url = Uri.parse('${ApiConstants.baseUrl}/api/services/');
+  try {
+    final response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
 
-    try {
-      final response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      });
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.map((json) => Staff.fromJson(json)).toList();
-      } else {
-        throw Exception('Failed to load staffs');
-      }
-    } catch (e) {
-      throw Exception('Network error: $e');
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => Staff.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load staffs');
     }
+  } catch (e) {
+    throw Exception('Network error: $e');
   }
+}
 
-  
-  Future<List<Staff>> fetchappointmentss() async {
-    final url = Uri.parse('${ApiConstants.baseUrl}/api/services/');
+Future<List<Staff>> fetchappointments() async {
+  final url = Uri.parse('${ApiConstants.baseUrl}/api/appointments/');
 
-    try {
-      final response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      });
+  try {
+    final response = await http.get(url, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.map((json) => Staff.fromJson(json)).toList();
-      } else {
-        throw Exception('Failed to load staffs');
-      }
-    } catch (e) {
-      throw Exception('Network error: $e');
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => Staff.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load staffs');
     }
+  } catch (e) {
+    throw Exception('Network error: $e');
+  } finally {
+    // TODO: implement finally
   }
+}
